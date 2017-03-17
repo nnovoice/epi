@@ -35,11 +35,33 @@ using namespace std;
 
 typedef unsigned long long int ULLI;
 
+int get_parity_bruteforce(ULLI * plli, int n)
+{
+    int count = 0;
+    ULLI t = 0, a = 0;
+    for (int i = 0; i < n; ++i) {
+        t = plli[i];
+        cout << "num= " << t << endl;
+        while (t) {
+            a = t & ~(t - 1); // get the last bit that is on
+            cout << "a= " << a << endl;
+            if (a > 0) ++count;
+            t -= a;
+        }
+        cout << "count= " << count << endl;
+    }
+    
+    if (count % 2 == 0)
+        return 0;
+
+    return 1;
+}
+
 int get_parity(ULLI * plli, int n)
 {
     cout << sizeof(ULLI) << endl;
     cout << "get_parity called with " << n << " numbers." << endl;
-    return -1;
+    return get_parity_bruteforce(plli, n);
 }
 
 int tests()
@@ -59,6 +81,16 @@ int tests()
     ULLI arr [2] = {1, 3};
     res = get_parity(arr, sizeof(arr)/sizeof(ULLI));
     assert(res == 1);
+
+    parr = new ULLI[5];
+    parr[0] = 1;
+    parr[1] = 0x1FFFFFFFFFFFFFFF;
+    parr[2] = 0x0000000000000007;
+    parr[3] = 0x0111111111111111;
+    parr[4] = 0xFFFFFFFFFFFFFFF1;
+    res = get_parity(parr, 5);
+    assert (res == 1);
+    delete parr;
 }
 
 int main()
