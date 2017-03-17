@@ -31,24 +31,70 @@
 #include <iostream>
 #include <limits>
 #include <assert.h>
+#include <unordered_map>
 using namespace std;
 
 typedef unsigned long long int ULLI;
+unordered_map<int, int> amap;
+const int MAX = 256;
+int parity_cache[MAX];
+
+int get_num_bits_set(ULLI v) 
+{
+    int count = 0;
+    ULLI a = 0;
+    //cout << "num= " << v << endl;
+    while (v) {
+        a = v & ~(v - 1); // get the last bit that is on
+        //cout << "a= " << a << endl;
+        if (a > 0) ++count;
+        v -= a;
+    }
+    //cout << "count= " << count << endl;
+    return count;
+}
 
 int get_parity_bruteforce(ULLI * plli, int n)
 {
     int count = 0;
     ULLI t = 0, a = 0;
     for (int i = 0; i < n; ++i) {
-        t = plli[i];
-        cout << "num= " << t << endl;
-        while (t) {
-            a = t & ~(t - 1); // get the last bit that is on
-            cout << "a= " << a << endl;
-            if (a > 0) ++count;
-            t -= a;
-        }
+        count += get_num_bits_set(plli[i]);
         cout << "count= " << count << endl;
+    }
+    
+    if (count % 2 == 0)
+        return 0;
+
+    return 1;
+}
+
+int build_parity_cache()
+{
+    int count = 0;
+    for (int i = 0; i < MAX; ++i) {
+        count = get_num_bits_set(i);
+        parity_cache[i] = count;
+        cout << "parity_cache[" << i << "]=" << count << endl;
+    }
+}
+
+int get_parity_optimized(ULLI * plli, int n)
+{
+    int count = 0;
+    ULLI t = 0;
+    char *pc = 0;
+    int m = 0;
+    
+    for (int i = 0; i < n; ++i) {
+        t = plli[i];
+        pc = (char *)&t;
+        for (int j = 0; j < 8; ++j, pc++) {
+            m = (int)*pc;
+            count += parity_cache[t];
+            cout << "m= " << m << " parity_cache val= " << parity_cache[m] << endl;
+        }
+        cout << "optimized parity: count= " << count << endl;
     }
     
     if (count % 2 == 0)
@@ -61,7 +107,11 @@ int get_parity(ULLI * plli, int n)
 {
     cout << sizeof(ULLI) << endl;
     cout << "get_parity called with " << n << " numbers." << endl;
-    return get_parity_bruteforce(plli, n);
+    int bruteforce_ret = get_parity_bruteforce(plli, n);
+    int optimized_ret = get_parity_optimized(plli, n);
+    cout << "bruteforce_ret= " << bruteforce_ret << " optimzed_ret= " << optimized_ret << endl;
+    assert (optimized_ret == bruteforce_ret);
+    return optimized_ret;
 }
 
 int tests()
@@ -95,6 +145,7 @@ int tests()
 
 int main()
 {
+    build_parity_cache();
     tests();
     return 0;
 }
