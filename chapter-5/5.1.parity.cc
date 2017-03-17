@@ -15,10 +15,11 @@
  * assumptions
  *
  * inputs to the method
- *      unsigned int get_parity(unsigned long long int * plli, int n)
+ *      int get_parity(unsigned long long int * plli, int n)
  *
  * output of the method
- *      unsigned int - which denotes the parity (either 0 or 1)
+ *      int - 0 or 1 which denotes the parity
+ *          -1 if error
  * 
  * test cases
  *
@@ -51,12 +52,12 @@ int tests()
     assert (res == 0);
     delete parr;
 
-    parr = new ULLI[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-    res = get_parity(parr, 16);
+    ULLI b[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+    res = get_parity(b, sizeof(b)/sizeof(ULLI));
     assert (res == 0);
 
     ULLI arr [2] = {1, 3};
-    res = get_parity(arr, 2);
+    res = get_parity(arr, sizeof(arr)/sizeof(ULLI));
     assert(res == 1);
 }
 
