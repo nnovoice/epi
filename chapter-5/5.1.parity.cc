@@ -32,6 +32,7 @@
 #include <limits>
 #include <assert.h>
 #include <unordered_map>
+#include <iomanip>
 using namespace std;
 
 typedef unsigned long long int ULLI;
@@ -75,7 +76,7 @@ int build_parity_cache()
     for (int i = 0; i < MAX; ++i) {
         count = get_num_bits_set(i);
         parity_cache[i] = count;
-        cout << "parity_cache[" << i << "]=" << count << endl;
+        //cout << "parity_cache[" << i << "]=" << count << endl;
     }
 }
 
@@ -83,16 +84,18 @@ int get_parity_optimized(ULLI * plli, int n)
 {
     int count = 0;
     ULLI t = 0;
-    char *pc = 0;
-    int m = 0;
+    unsigned char *pc = 0;
+    unsigned int m = 0;
     
     for (int i = 0; i < n; ++i) {
         t = plli[i];
-        pc = (char *)&t;
+        cout << "num = ";
+        cout << std::hex << std::uppercase << t << endl;
+        pc = (unsigned char *)&t;
         for (int j = 0; j < 8; ++j, pc++) {
-            m = (int)*pc;
-            count += parity_cache[t];
-            cout << "m= " << m << " parity_cache val= " << parity_cache[m] << endl;
+            m = (unsigned int)*pc;
+            count += parity_cache[m];
+            cout << "*pc=" << *pc << "int(*pc)= " << (unsigned int)*pc << " m= " << m << " parity_cache val= " << parity_cache[m] << endl;
         }
         cout << "optimized parity: count= " << count << endl;
     }
