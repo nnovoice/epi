@@ -61,7 +61,7 @@ int get_parity_bruteforce(ULLI * plli, int n)
     ULLI t = 0, a = 0;
     for (int i = 0; i < n; ++i) {
         count += get_num_bits_set(plli[i]);
-        cout << "count= " << count << endl;
+        // cout << "count= " << count << endl;
     }
     
     if (count % 2 == 0)
@@ -89,15 +89,15 @@ int get_parity_optimized(ULLI * plli, int n)
     
     for (int i = 0; i < n; ++i) {
         t = plli[i];
-        cout << "num = ";
-        cout << std::hex << std::uppercase << t << endl;
+        //cout << "num = ";
+        //cout << std::hex << std::uppercase << t << endl;
         pc = (unsigned char *)&t;
         for (int j = 0; j < 8; ++j, pc++) {
             m = (unsigned int)*pc;
             count += parity_cache[m];
-            cout << "*pc=" << *pc << "int(*pc)= " << (unsigned int)*pc << " m= " << m << " parity_cache val= " << parity_cache[m] << endl;
+            //cout << "*pc=" << *pc << "int(*pc)= " << (unsigned int)*pc << " m= " << m << " parity_cache val= " << parity_cache[m] << endl;
         }
-        cout << "optimized parity: count= " << count << endl;
+        //cout << "optimized parity: count= " << count << endl;
     }
     
     if (count % 2 == 0)
@@ -108,11 +108,11 @@ int get_parity_optimized(ULLI * plli, int n)
 
 int get_parity(ULLI * plli, int n)
 {
-    cout << sizeof(ULLI) << endl;
-    cout << "get_parity called with " << n << " numbers." << endl;
+    //cout << sizeof(ULLI) << endl;
+    //cout << "get_parity called with " << n << " numbers." << endl;
     int bruteforce_ret = get_parity_bruteforce(plli, n);
     int optimized_ret = get_parity_optimized(plli, n);
-    cout << "bruteforce_ret= " << bruteforce_ret << " optimzed_ret= " << optimized_ret << endl;
+    //cout << "bruteforce_ret= " << bruteforce_ret << " optimzed_ret= " << optimized_ret << endl;
     assert (optimized_ret == bruteforce_ret);
     return optimized_ret;
 }
